@@ -130,6 +130,42 @@ public class DatabaseClient
         cmd.ExecuteNonQuery();
     }
 
+    // ===== REPORTS =====
+
+    public static DataTable GetParticipantsByEvent(int eventId)
+    {
+        using var conn = GetConnection();
+        var cmd = new SqlCommand(
+            @"SELECT p.FirstName, p.LastName, p.Email, r.Status
+              FROM Registrations r
+              INNER JOIN Participants p ON r.ParticipantId = p.ParticipantId
+              WHERE r.EventId = @id", conn);
+        cmd.Parameters.AddWithValue("@id", eventId);
+        var table = new DataTable();
+        new SqlDataAdapter(cmd).Fill(table);
+        return table;
+    }
+
+    public static DataTable GetEventsByPeriod(DateTime from, DateTime to)
+    {
+        using var conn = GetConnection();
+        var cmd = new SqlCommand(
+            @"SELECT e.Title,
+                     CONVERT(NVARCHAR(10), e.EventDate, 104) AS EventDate,
+                     e.Location, e.EventType,
+                     COUNT(r.RegistrationId) AS ParticipantCount
+              FROM Events e
+              LEFT JOIN Registrations r ON e.EventId = r.EventId
+              WHERE e.EventDate BETWEEN @from AND @to
+              GROUP BY e.EventId, e.Title, e.EventDate, e.Location, e.EventType
+              ORDER BY e.EventDate", conn);
+        cmd.Parameters.AddWithValue("@from", from);
+        cmd.Parameters.AddWithValue("@to", to);
+        var table = new DataTable();
+        new SqlDataAdapter(cmd).Fill(table);
+        return table;
+    }
+
     // ===== REGISTRATIONS =====
 
     public static DataTable GetRegistrations()

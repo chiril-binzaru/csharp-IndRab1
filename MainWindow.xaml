@@ -242,8 +242,67 @@
 
             <!-- ============ REPORTS TAB ============ -->
             <TabItem Header="Reports">
-                <TextBlock Text="Coming soon..." VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="15"/>
+                <StackPanel Margin="10" Width="500" HorizontalAlignment="Left">
+
+                    <!-- Report 1 -->
+                    <TextBlock Text="Report 1 — Participants by Event"
+                               FontSize="14" FontWeight="SemiBold"
+                               Foreground="{StaticResource PrimaryBrush}"
+                               Margin="0,0,0,6"/>
+                    <GroupBox Header="Participants by Event" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Event:" Grid.Row="0" Grid.Column="0" Margin="0,0,8,8"/>
+                            <ComboBox x:Name="cbReportEvent"
+                                      Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="EventId"/>
+
+                            <Button Grid.Row="1" Grid.Column="1"
+                                    Content="Generate Report" HorizontalAlignment="Left" Width="140"
+                                    Click="BtnReportParticipants_Click"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Report 2 -->
+                    <TextBlock Text="Report 2 — Events by Period"
+                               FontSize="14" FontWeight="SemiBold"
+                               Foreground="{StaticResource PrimaryBrush}"
+                               Margin="0,0,0,6"/>
+                    <GroupBox Header="Events by Period">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="From:" Grid.Row="0" Grid.Column="0" Margin="0,0,8,8"/>
+                            <DatePicker x:Name="dpReportFrom" Grid.Row="0" Grid.Column="1" Margin="0,0,16,8"/>
+
+                            <TextBlock Text="To:" Grid.Row="0" Grid.Column="2" Margin="0,0,8,8"/>
+                            <DatePicker x:Name="dpReportTo" Grid.Row="0" Grid.Column="3" Margin="0,0,0,8"/>
+
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                    Content="Generate Report" HorizontalAlignment="Left" Width="140"
+                                    Click="BtnReportPeriod_Click"/>
+                        </Grid>
+                    </GroupBox>
+
+                </StackPanel>
             </TabItem>
 
         </TabControl>

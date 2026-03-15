@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using MessageBox = System.Windows.MessageBox;
 using Microsoft.Data.SqlClient;
 
 namespace IndRab1;
@@ -19,6 +20,7 @@ public partial class MainWindow : Window
         LoadParticipants();
         LoadRegistrations();
         PopulateRegistrationComboBoxes();
+        PopulateReportEventComboBox();
     }
 
     // ===== EVENTS =====
@@ -553,5 +555,76 @@ public partial class MainWindow : Window
         cbRegParticipant.SelectedItem = null;
         cbRegStatus.SelectedItem      = null;
         dgRegistrations.SelectedItem  = null;
+    }
+
+    // ===== REPORTS =====
+
+    private void PopulateReportEventComboBox()
+    {
+        try
+        {
+            cbReportEvent.ItemsSource = DatabaseClient.GetEvents().DefaultView;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error loading events for report: {ex.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnReportParticipants_Click(object sender, RoutedEventArgs e)
+    {
+        if (cbReportEvent.SelectedValue == null)
+        {
+            MessageBox.Show("Please select an event.", "Validation",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            int eventId = (int)cbReportEvent.SelectedValue;
+            string eventTitle = ((DataRowView)cbReportEvent.SelectedItem)["Title"].ToString()!;
+            var data = DatabaseClient.GetParticipantsByEvent(eventId);
+            ReportHelper.ShowParticipantsByEventReport(eventTitle, data);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error generating report: {ex.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnReportPeriod_Click(object sender, RoutedEventArgs e)
+    {
+        if (dpReportFrom.SelectedDate == null || dpReportTo.SelectedDate == null)
+        {
+            MessageBox.Show("Please select both dates.", "Validation",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        if (dpReportFrom.SelectedDate > dpReportTo.SelectedDate)
+        {
+            MessageBox.Show("'From' date must be before 'To' date.", "Validation",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            var data = DatabaseClient.GetEventsByPeriod(
+                dpReportFrom.SelectedDate.Value,
+                dpReportTo.SelectedDate.Value);
+            ReportHelper.ShowEventsByPeriodReport(
+                dpReportFrom.SelectedDate.Value,
+                dpReportTo.SelectedDate.Value,
+                data);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error generating report: {ex.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }
