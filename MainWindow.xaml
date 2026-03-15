@@ -1,0 +1,251 @@
+<Window x:Class="IndRab1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Event Manager" Height="640" Width="960"
+        WindowStartupLocation="CenterScreen">
+
+    <DockPanel>
+
+        <!-- ===== TOP HEADER BAR ===== -->
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="16,12">
+            <TextBlock Text="Event Manager"
+                       Foreground="{StaticResource WhiteBrush}"
+                       FontSize="18"
+                       FontWeight="Bold"/>
+        </Border>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <TabControl Margin="12">
+
+            <!-- ============ EVENTS TAB ============ -->
+            <TabItem Header="Events">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Input panel -->
+                    <GroupBox Header="Event Details" Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Title:"    Grid.Row="0" Grid.Column="0" Margin="0,0,8,8"/>
+                            <TextBox x:Name="txtEventTitle"    Grid.Row="0" Grid.Column="1" Margin="0,0,16,8"/>
+
+                            <TextBlock Text="Date:"    Grid.Row="0" Grid.Column="2" Margin="0,0,8,8"/>
+                            <DatePicker x:Name="dpEventDate"   Grid.Row="0" Grid.Column="3" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="Location:" Grid.Row="1" Grid.Column="0" Margin="0,0,8,8"/>
+                            <TextBox x:Name="txtEventLocation" Grid.Row="1" Grid.Column="1" Margin="0,0,16,8"/>
+
+                            <TextBlock Text="Type:"    Grid.Row="1" Grid.Column="2" Margin="0,0,8,8"/>
+                            <TextBox x:Name="txtEventType"     Grid.Row="1" Grid.Column="3" Margin="0,0,0,8"/>
+
+                            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4"
+                                        Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,6,0,0">
+                                <Button x:Name="btnAddEvent"    Content="Add"    Width="80" Margin="0,0,8,0" Click="BtnAddEvent_Click"/>
+                                <Button x:Name="btnEditEvent"   Content="Edit"   Width="80" Margin="0,0,8,0" Click="BtnEditEvent_Click"/>
+                                <Button x:Name="btnDeleteEvent" Content="Delete" Width="80" Margin="0,0,8,0"
+                                        Style="{StaticResource DangerButton}"  Click="BtnDeleteEvent_Click"/>
+                                <Button x:Name="btnClearEvent"  Content="Clear"  Width="80"
+                                        Style="{StaticResource NeutralButton}" Click="BtnClearEvent_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Filter bar -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,6">
+                        <TextBlock Text="Location:" Margin="0,0,6,0"/>
+                        <TextBox x:Name="txtFilterLocation" Width="160" Margin="0,0,16,0"
+                                 TextChanged="TxtFilterEvents_Changed"/>
+                        <TextBlock Text="Type:" Margin="0,0,6,0"/>
+                        <ComboBox x:Name="cbFilterType" Width="140" Margin="0,0,8,0"
+                                  SelectionChanged="TxtFilterEvents_Changed"/>
+                        <Button Content="Clear Filters" Width="100"
+                                Style="{StaticResource NeutralButton}" Click="BtnClearEventFilters_Click"/>
+                    </StackPanel>
+
+                    <!-- Data grid -->
+                    <DataGrid x:Name="dgEvents" Grid.Row="2" Margin="0,0,0,0"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single" SelectionChanged="DgEvents_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID"       Binding="{Binding EventId}"                                     Width="50"/>
+                            <DataGridTextColumn Header="Title"    Binding="{Binding Title}"                                       Width="*"/>
+                            <DataGridTextColumn Header="Date"     Binding="{Binding EventDate, StringFormat=\{0:dd.MM.yyyy\}}"    Width="100"/>
+                            <DataGridTextColumn Header="Location" Binding="{Binding Location}"                                    Width="150"/>
+                            <DataGridTextColumn Header="Type"     Binding="{Binding EventType}"                                   Width="120"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- ============ PARTICIPANTS TAB ============ -->
+            <TabItem Header="Participants">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Header="Participant Details" Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="First Name:" Grid.Row="0" Grid.Column="0" Margin="0,0,8,8"/>
+                            <TextBox x:Name="txtFirstName"  Grid.Row="0" Grid.Column="1" Margin="0,0,16,8"/>
+
+                            <TextBlock Text="Last Name:"  Grid.Row="0" Grid.Column="2" Margin="0,0,8,8"/>
+                            <TextBox x:Name="txtLastName"   Grid.Row="0" Grid.Column="3" Margin="0,0,0,8"/>
+
+                            <TextBlock Text="Email:"      Grid.Row="1" Grid.Column="0" Margin="0,0,8,8"/>
+                            <TextBox x:Name="txtEmail"      Grid.Row="1" Grid.Column="1" Margin="0,0,16,8"/>
+
+                            <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                        Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                <Button x:Name="btnAddParticipant"    Content="Add"    Width="80" Margin="0,0,8,0" Click="BtnAddParticipant_Click"/>
+                                <Button x:Name="btnEditParticipant"   Content="Edit"   Width="80" Margin="0,0,8,0" Click="BtnEditParticipant_Click"/>
+                                <Button x:Name="btnDeleteParticipant" Content="Delete" Width="80" Margin="0,0,8,0"
+                                        Style="{StaticResource DangerButton}"  Click="BtnDeleteParticipant_Click"/>
+                                <Button x:Name="btnClearParticipant"  Content="Clear"  Width="80"
+                                        Style="{StaticResource NeutralButton}" Click="BtnClearParticipant_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Search bar -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,6">
+                        <TextBox x:Name="txtParticipantSearch" Width="280" Margin="0,0,8,0"
+                                 TextChanged="TxtParticipantSearch_TextChanged"/>
+                        <Button Content="Clear Search" Width="100"
+                                Style="{StaticResource NeutralButton}" Click="BtnClearParticipantSearch_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="dgParticipants" Grid.Row="2" Margin="0,0,0,0"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single" SelectionChanged="DgParticipants_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID"         Binding="{Binding ParticipantId}" Width="50"/>
+                            <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"     Width="*"/>
+                            <DataGridTextColumn Header="Last Name"  Binding="{Binding LastName}"      Width="*"/>
+                            <DataGridTextColumn Header="Email"      Binding="{Binding Email}"         Width="200"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- ============ REGISTRATIONS TAB ============ -->
+            <TabItem Header="Registrations">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Header="Registration Details" Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Event:"       Grid.Row="0" Grid.Column="0" Margin="0,0,8,8"/>
+                            <ComboBox x:Name="cbRegEvent"
+                                      Grid.Row="0" Grid.Column="1" Margin="0,0,16,8"
+                                      DisplayMemberPath="Title"
+                                      SelectedValuePath="EventId"/>
+
+                            <TextBlock Text="Participant:" Grid.Row="0" Grid.Column="2" Margin="0,0,8,8"/>
+                            <ComboBox x:Name="cbRegParticipant"
+                                      Grid.Row="0" Grid.Column="3" Margin="0,0,0,8"
+                                      DisplayMemberPath="FullName"
+                                      SelectedValuePath="ParticipantId"/>
+
+                            <TextBlock Text="Status:"     Grid.Row="1" Grid.Column="0" Margin="0,0,8,8"/>
+                            <ComboBox x:Name="cbRegStatus"
+                                      Grid.Row="1" Grid.Column="1" Margin="0,0,16,8">
+                                <ComboBoxItem Content="Confirmed"/>
+                                <ComboBoxItem Content="Unconfirmed"/>
+                            </ComboBox>
+
+                            <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                        Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,8">
+                                <Button x:Name="btnAddReg"    Content="Add"           Width="110" Margin="0,0,8,0" Click="BtnAddReg_Click"/>
+                                <Button x:Name="btnUpdateReg" Content="Update Status" Width="120" Margin="0,0,8,0" Click="BtnUpdateReg_Click"/>
+                                <Button x:Name="btnDeleteReg" Content="Delete"        Width="80"  Margin="0,0,8,0"
+                                        Style="{StaticResource DangerButton}" Click="BtnDeleteReg_Click"/>
+                                <Button x:Name="btnClearReg"  Content="Clear"         Width="80"
+                                        Style="{StaticResource NeutralButton}" Click="BtnClearReg_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Filter bar -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,6">
+                        <TextBlock Text="Status:" Margin="0,0,6,0"/>
+                        <ComboBox x:Name="cbFilterRegStatus" Width="150" Margin="0,0,8,0"
+                                  SelectionChanged="CbFilterRegStatus_Changed">
+                            <ComboBoxItem Content="All" IsSelected="True"/>
+                            <ComboBoxItem Content="Confirmed"/>
+                            <ComboBoxItem Content="Unconfirmed"/>
+                        </ComboBox>
+                        <Button Content="Clear Filter" Width="100"
+                                Style="{StaticResource NeutralButton}" Click="BtnClearRegFilter_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="dgRegistrations" Grid.Row="2" Margin="0,0,0,0"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single" SelectionChanged="DgRegistrations_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID"          Binding="{Binding RegistrationId}"                          Width="50"/>
+                            <DataGridTextColumn Header="Event"       Binding="{Binding EventTitle}"                              Width="*"/>
+                            <DataGridTextColumn Header="Date"        Binding="{Binding EventDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="100"/>
+                            <DataGridTextColumn Header="First Name"  Binding="{Binding FirstName}"                               Width="120"/>
+                            <DataGridTextColumn Header="Last Name"   Binding="{Binding LastName}"                                Width="120"/>
+                            <DataGridTextColumn Header="Email"       Binding="{Binding Email}"                                   Width="180"/>
+                            <DataGridTextColumn Header="Status"      Binding="{Binding Status}"                                  Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- ============ REPORTS TAB ============ -->
+            <TabItem Header="Reports">
+                <TextBlock Text="Coming soon..." VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="15"/>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>
