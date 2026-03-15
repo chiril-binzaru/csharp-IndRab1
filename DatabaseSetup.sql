@@ -14,14 +14,14 @@ GO
 USE EventManagerDB;
 GO
 
-DELETE FROM Events;
-GO
+--DELETE FROM Events;
+--GO
 
-DELETE FROM Participants;
-GO
+--DELETE FROM Participants;
+--GO
 
-DELETE FROM Registrations;
-GO
+--DELETE FROM Registrations;
+--GO
 
 -- Create user for the login
 CREATE USER EventAdmin FOR LOGIN EventAdmin;
